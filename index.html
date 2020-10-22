@@ -1,158 +1,34 @@
 <!DOCTYPE html>
 <html>
 	<head>
-		<title>
-			
-		</title>
+	
 	</head>
 	
 	<body>
-		<header>
-			<h1>
-				Caesar Cipher Solver
-			</h1>
-		</header>
-		
-		<section>
-			<h2>
-				Ciphertext (copy + paste encrypted text in here)
-			</h2>
-			
-			<textarea id="ciphertext" cols="200" rows="20">
-		
-			</textarea>
-			
-			<h2>
-				Plaintext
-			</h2>
-			
-			<p id="plaintext">
-			
-			</p>
-			
-			<button onclick="decipher()">
-				Click to Decipher 
-			</button>
-			
-			<button onclick="smartDecipher()">
-				Click to Smart Decipher 
-			</button>
-		</section>
+		<h3>
+			Please Log In To Proceed:
+		</h3>
 	
-		<footer>
-			Programmed by team Cod3breakers for the 2020 National Cipher Challenge.
-		</footer>
+		<input id="code1" type="password">
+			
+		</input>
+		
+		<input id="code2" type="password">
+			
+		</input>
+		
+		<input id="code3" type="password">
+			
+		</input>
+		
+		<button onclick="submit()">
+			Submit
+		</button>
 	</body>
 	
-	<script>
-		//get elements from html 
-		var ciphertext = document.getElementById("ciphertext");
-		var plaintext = document.getElementById("plaintext");
-		
-		//create alphabet array 
-		var alphabet = ["a","b","c","d","e","f","g","h","i","j","k","l","m","n","o","p","q","r","s","t","u","v","w","x","y","z"];
-		
-		//create key words (most common in alphabet + any useful names)
-		var keywords = [
-			"the", "be", "and", "to", "of",
-		];
-		
-		//smart filter 
-		function smartFilter(text){
-			//turn text into list of words 
-			var words = [];
-			
-			var startIndex = 0;
-			
-			for(let k = 0; k < text.length; k++){
-				//check for space 
-				if(text[k] == " "){
-					//new word - add last word to list 
-					words.push(text.substring(startIndex,k));
-					startIndex = k + 1;
-				} else if(k == text.length - 1){
-					words.push(text.substring(startIndex));
-				};
-			};
-			
-			//set keywords counter
-			var keywordsCounter = 0;
-			
-			//check words for key words 
-			for(let k = 0; k < words.length; k++){
-				//check for match 
-				for(let l = 0; l < keywords.length; l++){
-					if(words[k].toLowerCase() == keywords[l].toLowerCase()){
-						keywordsCounter ++;
-					};
-				};
-			};
-			
-			//check the keywords counter 
-			if(keywordsCounter >= 5){
-				return true;
-			} else {
-				return false;
-			};
-		};
-		
-		//shift letter 
-		function shiftCharacter(character,shift){
-			//check if shift will need to start from the beginning of the alphabet 
-			character = character.toLowerCase();
-			if(alphabet.indexOf(character) >= 0){
-				if(shift + alphabet.indexOf(character) >= alphabet.length){
-					return alphabet[shift + alphabet.indexOf(character) - alphabet.length];
-				} else {
-					return alphabet[shift + alphabet.indexOf(character)];
-				};
-			} else {
-				return character;
-			};
-		};
-		
-		//shift string 
-		function shiftString(text, shift){
-			//let new text 
-			let plaintextString = "";
-			console.log(shift);
-			//iterate text and shift 
-			for(i=0;i<text.length;i++){
-				plaintextString += shiftCharacter(text[i],shift);
-			};
-			
-			//return new text 
-			return plaintextString;
-		};
-		
-		//decipher 
-		function decipher(){
-			//reset plaintext innerHTML
-			plaintext.innerHTML = "";
-			
-			//get text input 
-			for(let j = 1; j < 26; j++){
-				plaintext.innerHTML += "Shift " + j + ":";
-				plaintext.innerHTML += shiftString(ciphertext.value,j);
-				plaintext.innerHTML += "<br/><br/>"
-			};
-		};
-		
-		//smart decipher 
-		function smartDecipher(){
-			//reset plaintext innerHTML
-			plaintext.innerHTML = "";
-			
-			//get text input 
-			for(let j = 1; j < 26; j++){
-				let newText = shiftString(ciphertext.value,j);
-				
-				if(smartFilter(newText)){
-					plaintext.innerHTML += "Shift " + j + ":";
-					plaintext.innerHTML += newText;
-					plaintext.innerHTML += "<br/><br/>";
+	<script>var passcode1=472;var passcode2=960;var passcode3=135;function submit(){if(document.getElementById("code1").value == passcode1 && document.getElementById("code2").value == passcode2 && document.getElementById("code3").value == passcode3){	location = "cipherSolver.html";} else { while(true){ alert("Permission Denied!");
 				};
 			};
 		};
 	</script>
-</html>
+</html> 
