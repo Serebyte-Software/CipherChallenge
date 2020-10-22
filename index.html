@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<title>
+			
+		</title>
+	</head>
+	
+	<body>
+		<header>
+			<h1>
+				Caesar Cipher Solver
+			</h1>
+		</header>
+		
+		<section>
+			<h2>
+				Ciphertext
+			</h2>
+			
+			<textarea id="ciphertext">
+		
+			</textarea>
+			
+			<h2>
+				Plaintext
+			</h2>
+			
+			<p id="plaintext">
+			
+			</p>
+			
+			<button onclick="decipher()">
+				Click to Decipher 
+			</button>
+		</section>
+	
+		<footer>
+			Programmed by team Cod3breakers for the 2020 National Cipher Challenge.
+		</footer>
+	</body>
+	
+	<script>
+		//get elements from html 
+		var ciphertext = document.getElementById("ciphertext");
+		var plaintext = document.getElementById("plaintext");
+		
+		//create alphabet array 
+		var alphabet = ["a","b","c","d","e","f","g","h","i","j","k","l","m","n","o","p","q","r","s","t","u","v","w","x","y","z"];
+		
+		//shift letter 
+		function shiftCharacter(character,shift){
+			//check if shift will need to start from the beginning of the alphabet 
+			character = character.toLowerCase();
+			if(alphabet.indexOf(character) >= 0){
+				if(shift + alphabet.indexOf(character) >= alphabet.length){
+					return alphabet[shift + alphabet.indexOf(character) - alphabet.length];
+				} else {
+					return alphabet[shift + alphabet.indexOf(character)];
+				};
+			} else {
+				return character;
+			};
+		};
+		
+		//shift string 
+		function shiftString(text, shift){
+			//let new text 
+			let plaintextString = "";
+			console.log(shift);
+			//iterate text and shift 
+			for(i=0;i<text.length;i++){
+				plaintextString += shiftCharacter(text[i],shift);
+			};
+			
+			//return new text 
+			return plaintextString;
+		};
+		
+		//decipher 
+		function decipher(){
+			//reset plaintext innerHTML
+			plaintext.innerHTML = "";
+			
+			//get text input 
+			for(let j = 1; j < 26; j++){
+				plaintext.innerHTML += "Shift " + j + ":";
+				plaintext.innerHTML += shiftString(ciphertext.value,j);
+				plaintext.innerHTML += "<br/><br/>"
+			};
+		};
+		
+	</script>
+</html>
