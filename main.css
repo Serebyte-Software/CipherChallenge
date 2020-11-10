@@ -1,0 +1,10 @@
+/* Main.csss */
+
+td {
+	border: 1px solid black;
+};
+
+textarea {
+	cols: 100;
+	rows: 5;
+}

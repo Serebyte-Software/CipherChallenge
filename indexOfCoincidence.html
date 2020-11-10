@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<title>
+			Index Of Coincidence
+		</title>
+	</head>
+	
+	<body>
+		<h1>
+			Index Of Coincidence Calculator
+		</h1>
+		
+		<br/>
+		
+		<p>
+			The index of coincidence is the probability of picking the same character twice in a text. It can be used to identify how close a text is to english.
+		</p>
+		
+		<br/>
+		
+		<textarea id="inputText"></textarea>
+		
+		<button onclick="runIOC()">Calculate IOC</button>
+		
+		<p id="output"></p>
+		
+		<script>
+			//load html 
+			var inputText = document.getElementById("inputText");
+			var output = document.getElementById("output");
+			var alphabet = "abcdefghijklmnopqrstuvwxyz";
+			var letterFrequencies = [];
+			
+			for(i = 0; i < alphabet.length; i++){
+				letterFrequencies.push(0);
+			};
+			
+			//run IOC 
+			function runIOC(){
+				//get runIOC
+				var text = inputText.value.toLowerCase();
+				
+				var newText = "";
+				
+				for(i = 0; i < text.length; i++){
+					if(alphabet.indexOf(text[i]) != -1){
+						newText += text[i];
+					};
+				};
+				
+				//count letter frequencies
+				for(i = 0; i < newText.length; i++){
+					letterFrequencies[alphabet.indexOf(newText[i])] += 1;
+				};
+				
+				//calculate IOC
+				var indexOfCoincidence = 0;
+				
+				for(i = 0; i < letterFrequencies.length; i++){
+					indexOfCoincidence += ((letterFrequencies[i] * (letterFrequencies[i] - 1))/(newText.length * (newText.length - 1)));
+				};
+				
+				//indexOfCoincidence /= newText.length;
+				output.innerHTML = "<p>" + indexOfCoincidence + "</p>";
+			};	
+		</script>
+	</body>
+</html>

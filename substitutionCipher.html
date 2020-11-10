@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<title>
+			Substitution Cipher Tool
+		</title>
+		
+		<link rel="stylesheet" type="text/css" href="main.css"></link>
+	</head>
+	
+	<body>
+		<header>
+			<center>
+				<h1>
+					Substitution Cipher
+				</h1>
+			</center>
+		</header>
+		
+		<section>
+			<h2>
+				Input Ciphertext Below:
+			</h2>
+			
+			<textarea id="ciphertextInput" cols=100 rows=5></textarea>
+			
+			<br/>
+			
+			<br/>
+			
+			<h2>
+				Switch Around the Letters Below:
+			</h2>
+			
+			<table id="inputTable">
+				<tr><td>Letter In Ciphertext</td><td>Letter In Plaintext</td></tr>
+			</table>
+			
+			<button onclick="confirmChanges()">
+				Confirm Changes
+			</button>
+			
+			<br/>
+			
+			<p id="outputParagraph">
+			
+			</p>
+		</section>
+		
+		<footer>
+			Programmed by team Cod3breakers for the 2020 National Cipher Challenge.
+		</footer>
+		
+		<script>
+			//get html elements 
+			var ciphertextInput = document.getElementById("ciphertextInput");
+			var inputTable = document.getElementById("inputTable");
+			var outputParagraph = document.getElementById("outputParagraph");
+		
+			//set alphabet 
+			var alphabet = "abcdefghijklmnopqrstuvwxyz";
+			
+			//add elements to table 
+			for(i = 0; i < alphabet.length; i ++){
+				inputTable.innerHTML += "<tr><td>" + alphabet[i] + "</td><td><input id = \"char" + alphabet[i] + "\" value=\"" + alphabet[i] + "\"></input></td></tr>"
+			};
+			
+			//confirm changes 
+			function confirmChanges(){
+				//get ciphertext 
+				var ciphertext = ciphertextInput.value.toLowerCase();
+				var plaintext = "";
+				
+				//convert ciphertext 
+				for(i = 0; i < ciphertext.length; i++){
+					//add substituted character 
+					if(alphabet.indexOf(ciphertext[i]) == -1){
+						plaintext += ciphertext[i];
+					} else {
+						plaintext += document.getElementById("char" + ciphertext[i]).value.toLowerCase()
+					};
+				};
+				
+				//set innerhtml of output 
+				outputParagraph.innerHTML = plaintext;
+			};
+		</script>
+	</body>
+</html>

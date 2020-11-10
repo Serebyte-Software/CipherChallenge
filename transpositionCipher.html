@@ -1,0 +1,228 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<title>
+			Transposition Cipher Tool
+		</title>
+		
+		<link rel="stylesheet" type="text/css" href="main.css"></link>
+	</head>
+	
+	<body>
+		<header>
+			<center>
+				<h1>
+					Transposition Cipher
+				</h1>
+			</center>
+		</header>
+		
+		<section>
+			<h2>
+				Input Ciphertext Below:
+			</h2>
+			
+			<textarea id="ciphertextInput" cols=100 rows=5></textarea>
+			
+			<br/>
+			
+			<br/>
+			
+			<h2>
+				Input The Key Below:
+			</h2>
+			
+			<input id="keyInput"></input>
+			
+			<br/>
+			
+			<br/>
+			
+			<h2>
+				Select The Write/Read Type Below:
+			</h2>
+			
+			<select id="typeSelect">
+				<option value="rr">Read By Rows, Write By Rows</option>
+				<option value="rc">Read By Rows, Write By Columns</option>
+				<option value="cr">Read By Columns, Write By Rows</option>
+				<option value="cc">Read By Columns, Write By Columns</option>
+			</select>
+			
+			<br/>
+			
+			<br/>
+			
+			<button onclick="decrypt()">Decrypt</button>
+		
+			<br/>
+			
+			
+			<h2>Output Will Appear Below:</h2>
+			<p id="output"></p>
+		</section>
+		
+		<footer>
+			Programmed by team Cod3breakers for the 2020 National Cipher Challenge.
+		</footer>
+		
+		<script>
+			//get html elements 
+			var ciphertextInput = document.getElementById("ciphertextInput");
+			var keyInput = document.getElementById("keyInput");
+			var typeSelect = document.getElementById("typeSelect");
+			var output = document.getElementById("output");
+			
+			//set alphabet 
+			var alphabet = "abcdefghijklmnopqrstuvwxyz";
+			
+			//decrypt function 
+			function decrypt(){
+				//get cipher text 
+				var ciphertext = ciphertextInput.value.toLowerCase();
+				var key = keyInput.value.toLowerCase();
+				var type = typeSelect.value;
+				
+				//remove spaces from ciphertext 
+				var newCiphertext = "";
+				
+				for(i = 0; i < ciphertext.length; i++){
+					if(ciphertext[i] != " "){
+						newCiphertext += ciphertext[i];
+					};
+				};
+				
+				//remove repeated character
+				var newKey = "";
+				var found = false;
+					
+				for(i = 0; i < key.length; i++){
+					found = false;
+					
+					for(let j = 0; j < newKey.length; j++){
+						if(key[i] == newKey[j]){
+							//do not add - found = true 
+							found = true;
+						};
+					};
+					
+					//found?
+					if(found == false){
+						newKey += key[i];
+					};
+				};
+				
+				var keyWithoutRepeatedCharacters = newKey;
+				
+				//put in alphabetical order
+				var counter = 0;
+				var placeholder = "";
+				for(i = 1; i < newKey.length; i++){
+					counter = i;
+					
+					while(alphabet.indexOf(newKey[counter - 1]) > alphabet.indexOf(newKey[counter])){
+						//swap
+						newKey = newKey.substring(0,counter - 1) + newKey[counter] + newKey[counter - 1] + newKey.substring(counter+1);
+						
+						//decrement counter 
+						counter --;
+						
+						if(counter - 1 < 0){
+							alert();
+							break;
+						};
+					};
+				};
+				
+				//decide type 
+				if(type == "rr"){
+					//written by rows, read by rows 
+					var columns = newKey.length;
+					var rows = Math.ceil(newCiphertext.length / columns);
+					
+					//get rows data
+					var rowsData = [];
+					
+					for(i = 0; i < rows; i++){
+						rowsData.push(newCiphertext.substring(columns * i,(columns * (i+1)))); 
+					};
+					
+					while(rowsData[rowsData.length - 1].length < columns){
+						rowsData[rowsData.length - 1] += "_";
+					};
+					
+					//console.log(rowsData);
+					
+					
+					//get column order 
+					var columnsOrder = [];
+					console.log(keyWithoutRepeatedCharacters);
+					for(i = 0; i < newKey.length; i++){
+						columnsOrder.push(newKey.indexOf(keyWithoutRepeatedCharacters[i]));
+					};
+					
+					//get plaintext 
+					var plaintext = "";
+					
+					for(i = 0; i < rowsData.length; i++){
+						for(let j = 0; j < columnsOrder.length; j++){
+							if(rowsData[i][columnsOrder[j]] != undefined){
+								plaintext += rowsData[i][columnsOrder[j]];
+							};
+						};
+					};
+					
+					//set innerhtml of output 
+					output.innerHTML = plaintext;
+				} else if(type == "rc"){
+					//written by rows, read by rows 
+					var columns = newKey.length;
+					var rows = Math.ceil(newCiphertext.length / columns);
+					
+					//get rows data
+					var columnsData = [];
+					
+					for(i = 0; i < columns; i++){
+						rowsData.push(newCiphertext.substring(columns * i,(columns * (i+1)))); 
+					};
+					
+					while(rowsData[rowsData.length - 1].length < columns){
+						rowsData[rowsData.length - 1] += "_";
+					};
+					
+					
+					//var plaintext = "";
+					
+					//for(i = 0; i < columns; i++){
+					//	for(let j = 0; j < rowsData.length; j++){
+					//		plaintext += rowsData[j][i];
+					//	};
+					//};
+					console.log(rowsData);
+					
+					//get column order 
+					var columnsOrder = [];
+					console.log(keyWithoutRepeatedCharacters);
+					for(i = 0; i < newKey.length; i++){
+						columnsOrder.push(newKey.indexOf(keyWithoutRepeatedCharacters[i]));
+					};
+					
+					//get plaintext 
+					var plaintext = "";
+					
+					for(i = 0; i < rowsData.length; i++){
+						for(let j = 0; j < columnsOrder.length; j++){
+							if(rowsData[i][columnsOrder[j]] != undefined){
+								plaintext += rowsData[i][columnsOrder[j]];
+							};
+						};
+					};
+					
+					
+					//set innerhtml of output 
+					output.innerHTML = plaintext;
+				};
+			};
+		</script>
+	</body>
+</html>

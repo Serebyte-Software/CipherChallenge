@@ -1,0 +1,396 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<title>
+			Transposition Cipher Solver
+		</title>
+		
+		<style>
+			td {
+				border: 1px solid black;
+			}
+		</style>
+	</head>
+	
+	<body>
+		<h1>
+			Transposition Cipher Decoder
+		</h1>
+		
+		<br/>
+		
+		<textarea id="ciphertextInput"></textarea>
+	
+		<br/>
+		
+		<input id="key"></input>
+		
+		<br/>
+		
+		<select id="readMenu">
+			<option value="rows">
+				Read Rows
+			</option>
+			
+			<option value="columns">
+				Read Columns
+			</option>
+		</select>
+		
+		<br/>
+		
+		<select id="writeMenu">
+			<option value="rows">
+				Write Rows
+			</option>
+			
+			<option value="columns">
+				Write Columns
+			</option>
+		</select>
+		
+		<br/>
+		
+		<button onclick="decode()">
+			Decode
+		</button>
+		
+		<br/>
+		
+		<button onclick="decodeWithoutKey()">
+			Decode Without Key
+		</button>
+		
+		<br/>
+		
+		<div id="output"></div>
+	</body>
+	
+	<script>
+		//load HTML elements 
+		var ciphertextInput = document.getElementById("ciphertextInput");
+		var key = document.getElementById("key");
+		var output = document.getElementById("output");
+		var readMenu = document.getElementById("readMenu");
+		var writeMenu = document.getElementById("writeMenu");
+		
+		//define alphabet 
+		var alphabet = "abcdefghijklmnopqrstuvwxyz";
+		
+		//define numbers 
+		var numbers = "0123456789";
+		
+		//encode function 
+		function encode(){
+			//get ciphertext 
+			var ciphertext = ciphertextInput.value;
+			var realKey = key.value;
+			
+			//remove unnecessary characters from ciphertext
+			ciphertext = ciphertext.toLowerCase();
+			var newCiphertext = "";
+			
+			for(i = 0; i < ciphertext.length; i++){
+				if(alphabet.indexOf(ciphertext[i]) != -1){
+					newCiphertext += ciphertext[i];
+				};
+			};
+			
+			//console.log(newCiphertext);
+			//console.log(newCiphertext.length);
+			
+			//set ciphertext to new ciphertext 
+			ciphertext = newCiphertext;
+			
+			//break down ciphertext into blocks of key length 
+			var columns = realKey.length;
+			var rows = Math.ceil(ciphertext.length / columns);
+			var textBlocks = [];
+			for(i = 0; i < rows - 1; i++){
+				//add column to block of text
+				textBlocks.push(ciphertext.substring(columns * i, columns * (i+1)));
+			};
+			
+			console.log(columns + " " + rows);
+			
+			//add final row 
+			var finalRow = "";
+			for(i = 0; i < columns; i++){
+				if((columns * (rows - 1)) + i < ciphertext.length){
+					finalRow += ciphertext[(columns * (rows - 1)) + i];
+				} else {
+					finalRow += "x";
+				};
+			};
+			
+			textBlocks.push(finalRow);
+			
+			console.log(textBlocks);
+		
+			//draw table 
+			var outputString = "<h2>Ciphertext in Table</h2><br/><table>";
+			
+			console.log(textBlocks.length);
+			for(i = 0; i < textBlocks.length; i++){
+				outputString += "<tr>";
+				
+				for(let j = 0; j < textBlocks[i].length; j++){
+					outputString += "<td>" + textBlocks[i][j] + "</td>";
+				};
+				
+				outputString += "</tr>";
+			};
+			
+			outputString += "</table>";
+			
+			output.innerHTML = outputString;
+			
+			//specify the order of the columns
+			var orderOfColumns = [];
+			var smallestValue = 1000;
+			var smallestIndex = 0;
+			var setKeyLength = realKey.length;
+			var newKey = [];
+			
+			for(i = 0; i < realKey.length; i++){
+				newKey.push(realKey[i]);
+			};
+			
+			for(i = 0; i < setKeyLength; i++){
+				smallestValue = 100;
+				smallestIndex = 0;
+	
+				for(j = 0; j < newKey.length; j++){
+					if(newKey[j] != "_" && smallestValue > alphabet.indexOf(newKey[j]) && alphabet.indexOf(newKey[j]) != -1){
+						smallestValue = alphabet.indexOf(realKey[j]);
+						smallestIndex = j;
+					};
+				};
+				
+				//remove newKey
+				console.log(newKey[smallestIndex]);
+				newKey[smallestIndex] = "_";
+				console.log("B: " + newKey[smallestIndex]);
+				orderOfColumns.push(smallestIndex);
+			};
+			
+			console.log(orderOfColumns);
+			
+			//create new spaces
+			output.innerHTML += "<br/><br/>";
+			
+			//create new enciphered text 
+			var orderedTextBlocks = [];
+			
+			for(i = 0; i < textBlocks.length; i++){
+				//create new string 
+				let tempString = "";
+				
+				//
+				for(let j = 0; j < orderOfColumns.length; j++){
+					tempString += textBlocks[i][orderOfColumns[j]];
+				};
+			
+				orderedTextBlocks.push(tempString);
+			};
+			
+			console.log(orderedTextBlocks.join(''));
+			
+			//add new table 
+			outputString = "<table>";
+			for(i = 0; i < orderedTextBlocks.length; i++){
+				outputString += "<tr>";
+				
+				for(let j = 0; j < orderedTextBlocks[i].length; j++){
+					outputString += "<td>";
+					outputString += orderedTextBlocks[i][j];
+					outputString += "</td>";
+				};
+				
+				outputString += "</tr>";
+			};
+			
+			outputString += "</table>";
+			output.innerHTML += outputString;
+			
+			//add ciphertext
+			outputString = "<br/><br/><p>";
+			
+			outputString +=  orderedTextBlocks.join('');
+
+			outputString += "</p>";
+			
+			output.innerHTML += outputString;
+		};
+		
+		//decode 
+		function decode(){			
+			//add output string 
+			output.innerHTML = "<p>" + decodeWithKey(key.value, readMenu.value, writeMenu.value) + "</p>";
+		};
+		
+		//decodeWithKey
+		function decodeWithKey(key, readSetting, writeSetting){
+			//remove repeated characters from key 
+			var realKey = "";
+			
+			for(i = 0 ; i < key.length; i++){
+				if(realKey.indexOf(key[i]) == -1){
+					//add 
+					realKey += key[i];
+				};
+			};
+			
+			var keyWithoutPunctuation = realKey;
+
+			//get ciphertext 
+			var ciphertext = ciphertextInput.value.toLowerCase();
+			
+			//remove unwanted characters from ciphertext 
+			var newCiphertext = "";
+			
+			for(i = 0; i < ciphertext.length; i++){
+				if(alphabet.indexOf(ciphertext[i]) != -1 || numbers.indexOf(ciphertext[i])  != -1){
+					newCiphertext += ciphertext[i];
+				};
+			};
+			
+			//set ciphertext to new ciphertext 
+			ciphertext = newCiphertext;
+		
+			//put key in alphabetical order 
+			var realKeyArray = [];
+			
+			for(i = 0; i < realKey.length; i++){
+				realKeyArray.push(realKey[i]);
+			};
+			
+			realKeyArray = realKeyArray.sort();
+			
+			var sortedKey = "";
+			
+			for(i = 0; i < realKeyArray.length; i++){
+				sortedKey += realKeyArray[i];
+			};
+			
+			//alert(sortedKey);
+			
+			//create text blocks array - empty 
+			var textBlocks = [];
+			var columns = realKey.length;
+			var rows = Math.ceil(ciphertext.length / columns);
+			var columnCount = 0;
+			var rowCount = 0;
+			
+			//read phase - columns or rows?
+			if(readSetting == "rows"){
+				//add empty strings to textBlocks
+				for(i = 0; i < rows; i++){
+					textBlocks.push("");
+				};
+		
+				//fill rows of text in textblocks 
+				for(i = 0; i < ciphertext.length; i++){
+					textBlocks[rowCount] += ciphertext[i];
+					
+					columnCount ++;
+					
+					if(columnCount >= columns){
+						rowCount ++;
+						columnCount = 0;
+					};
+				};
+				
+				//console.log(textBlocks);
+			} else {
+				//add empty strings to textBlocks
+				for(i = 0; i < rows; i++){
+					textBlocks.push("");
+				};
+				
+				//fill columns of text in textblocks 
+				for(i = 0; i < ciphertext.length; i++){
+					textBlocks[rowCount] += ciphertext[i];
+					
+					rowCount ++;
+					
+					if(rowCount >= rows){
+						columnCount ++;
+						rowCount = 0;
+					};
+				};
+			};
+			
+			//console.log(textBlocks);
+			
+			//create orderedKeyNums
+			var orderedKeyNums = []; //this contains the index of each realKey char in keyWithoutPunctuation
+			
+			for(i = 0; i < realKey.length; i++){
+				orderedKeyNums.push(sortedKey.indexOf(realKey[i]));
+			};
+			
+			//console.log(orderedKeyNums);
+		
+			//create ordered text blocks array 
+			var orderedTextBlocks = [];
+			
+			for(i = 0; i < textBlocks.length; i++){
+				orderedTextBlocks.push("");
+				
+				for(let j = 0; j < textBlocks[i].length; j++){
+					orderedTextBlocks[i] += textBlocks[i][orderedKeyNums[j]];
+				};
+			};
+			
+			textBlocks = orderedTextBlocks;
+			
+			console.log(orderedTextBlocks);
+			
+			//declare output string 
+			var outputString = "";
+			
+			//write phase - columns or rows?
+			if(writeSetting == "rows"){
+				//set string to rows joined end to end
+				console.log(textBlocks.join(''));
+				outputString = textBlocks.join('');
+			} else {
+				//set string to columns joined end to end
+				for(i = 0; i < columns; i++){
+					for(let j = 0; j < rows; j++){
+						outputString += textBlocks[j][i];
+					};
+				};
+			};
+			
+			//return outputString
+			return outputString;
+		};
+		
+		function decodeWithoutKey(){
+			//get ciphertext - call it maintext to avoid confusion 
+			var mainText = ciphertextInput.value.toLowerCase();
+			
+			//remove unwanted characters from ciphertext 
+			var newMainText = "";
+			
+			for(i = 0; i < mainText.length; i++){
+				if(alphabet.indexOf(mainText[i]) != -1 || numbers.indexOf(mainText[i])  != -1){
+					newMainText += mainText[i];
+				};
+			};
+			
+			//set ciphertext to new ciphertext 
+			mainText = newMainText;
+			
+			//get factors of text length 
+			alert(mainText.length);
+			
+			//try all possible keys for key length 2 to 9
+			var iterativeKey = "";
+			
+			
+		};
+	</script>
+</html>

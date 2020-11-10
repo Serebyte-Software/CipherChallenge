@@ -1,34 +1,40 @@
 <!DOCTYPE html>
 <html>
 	<head>
-	
+		<title>
+			Cipher Challenge Code Index
+		</title>
 	</head>
 	
 	<body>
-		<h3>
-			Please Log In To Proceed:
-		</h3>
-	
-		<input id="code1" type="password">
-			
-		</input>
+		<h1>
+			Menu
+		</h1>
 		
-		<input id="code2" type="password">
-			
-		</input>
+		<br/>
 		
-		<input id="code3" type="password">
-			
-		</input>
+		<br/>
 		
-		<button onclick="submit()">
-			Submit
-		</button>
+		<a href="ciphertextAnalyser.html">
+			Frequency Analysis Tool
+		</a>
+		
+		<br/>
+		
+		<a href="indexOfCoincidence.html">
+			Index Of Coincidence Calculator
+		</a>
+		
+		<br/>
+		
+		<a href="cipherSolver.html">
+			Caesar and Affine Shift Decoders
+		</a>
+		
+		<br/>
+		
+		<a href="substitutionCipher.html">
+			Substitution Cipher
+		</a>
 	</body>
-	
-	<script>var passcode1=472;var passcode2=960;var passcode3=135;function submit(){if(document.getElementById("code1").value == passcode1 && document.getElementById("code2").value == passcode2 && document.getElementById("code3").value == passcode3){	location = "cipherSolver.html";} else { while(true){ alert("Permission Denied!");
-				};
-			};
-		};
-	</script>
-</html> 
+</html>
